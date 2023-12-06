@@ -1,0 +1,219 @@
+body{
+    margin: 0;
+    /* font-family: 'Poppins', sans-serif; */
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Navbar Start */
+.navbar {
+    -webkit-box-shadow: 0px 7px 21px -15px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 7px 21px -15px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 7px 21px -15px rgba(0, 0, 0, 0.75);
+}
+
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #6D6D6D;
+}
+
+.line{
+    font-size: 25px;
+    color: rgba(0,0,0,.5);
+    font-weight: 100;
+}
+
+.btn-outline-login{
+    --bs-btn-color: #5B8930 !important;
+    --bs-btn-border-color: #5B8930 !important;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #5B8930 !important;
+    --bs-btn-hover-border-color: #5B8930 !important;
+    --bs-btn-focus-shadow-rgb: 25,135,84;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #5B8930 !important;
+    --bs-btn-active-border-color: #5B8930 !important;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #5B8930 !important;
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: #5B8930 !important;
+    --bs-gradient: none;
+}
+.btn-register{
+    --bs-btn-color: #fff !important;
+    --bs-btn-bg: #5B8930 !important;
+    --bs-btn-border-color: #5B8930 !important;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #5B8930 !important;
+    --bs-btn-hover-border-color: #5B8930 !important;
+    --bs-btn-focus-shadow-rgb: 60,153,110;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #5B8930 !important;
+    --bs-btn-active-border-color: #13653f;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #5B8930 !important;
+    --bs-btn-disabled-border-color: #5B8930 !important;
+}
+/* Navbar End */
+
+.carousel{
+    margin-top: 120px;
+}
+
+.produk-pilhan{
+    font-size: 18px;
+}
+
+.lihat-semua{
+    color: #5B8930;
+}
+
+/* login register page start */
+.h-100vh {
+    height: 100vh !important;
+}
+
+.w-320px {
+    max-width: 320px !important;
+}
+
+.w-500px{
+    max-width: 500px !important;
+}
+
+.login-btn {
+    color: white !important;
+    background-color: #5B8930 !important;
+    border-color: #5B8930 !important;
+}
+
+.login-btn:hover {
+    color: #5B8930 !important;
+    background-color: white !important;
+    border-color: #5B8930 !important;
+}
+
+a.no-underline {
+    text-decoration: none;
+}
+
+a.back {
+    color: #5B8930;
+}
+
+.sign-in {
+    color: #5B8930 !important;
+}
+
+/* login page end */
+
+.primary-color{
+    background-color: #5B8930 !important;
+}
+
+.produk-detail{
+    margin-top: 120px;
+}
+
+.img-produk-detail{
+    height: 400px;
+    width: 400px;
+}
+
+.nama-produk{
+    font-size: 1.28571rem;;
+}
+
+.harga-produk{
+    font-size: 2rem;
+}
+
+.line-vertical-inporduk{
+    background: var( #F0F3F7);
+    height: 1px;
+}
+
+.foto-penjual-inproduk{
+    vertical-align: middle;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.discovery{
+    margin-top: 120px;
+    /* height: 300vh; */
+}
+
+.transaction{
+    margin-top: 120px;
+}
+
+.foto-produk-checkout{
+    height: 80px;
+    width: 80px;
+}
+
+.text-setuju{
+    font-size: 10px;
+}
+
+.register-store{
+    margin-top: 110px;
+}
+
+.sidenav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #F8F9FA;
+    overflow-x: hidden;
+    padding-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Adjust the values as needed */
+}
+
+.sidenav a {
+    padding: 6px 6px 6px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #000;
+    display: block;
+}
+
+.sidenav a:hover {
+    color: #5B8930;
+}
+
+.navbar-seller{
+    margin-left: 200px;
+}
+
+.main-seller-center {
+    margin-left: 200px;
+    margin-right: 40px;
+}

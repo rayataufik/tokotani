@@ -1,0 +1,76 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img src="{{ asset('assets/images/Logo.png') }}" alt="Tokotani" height="50">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active me-2" aria-current="page" href="#">Kategori</a>
+        </li>
+      </ul>
+      <form class="d-flex w-75 has-search" role="search">
+        <span class="bx bx-search form-control-feedback"></span>
+        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+      </form>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link active me-2 ms-2" aria-current="page" href="#">
+            <img src="{{ asset('assets/images/shopping-cart.svg') }}" alt="Cart" height="20">
+          </a>
+        </li>
+        <span class="line">|</span>
+        @auth
+        @if (auth()->user()->role == 'pelanggan')
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Hi, {{auth()->user()->fullname}}
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Pesanan</a></li>
+            <li><a class="dropdown-item" href="/pendaftaran-toko">Daftar Seller</a></li>
+            <li><a class="dropdown-item" href="#">Setting</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <form action="/logout" method="POST">
+                @csrf
+                <button type="submit" class="dropdown-item">Logout</button>
+              </form>
+            </li>
+          </ul>
+        </li>
+        @elseif (auth()->user()->role == 'petani')
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Hi, {{auth()->user()->fullname}}
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Pembelian</a></li>
+            <li><a class="dropdown-item" href="/seller/dashboard">Seller Center</a></li>
+            <li><a class="dropdown-item" href="#">Setting</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <form action="/logout" method="POST">
+                @csrf
+                <button type="submit" class="dropdown-item">Logout</button>
+              </form>
+            </li>
+          </ul>
+        </li>
+        @endif
+        @else
+        <a class="btn btn-outline-login ms-3" href="/login" role="button">Login</a>
+        <a class="btn btn-register ms-3" href="/register" role="button">Register</a>
+        @endauth
+      </ul>
+    </div>
+  </div>
+</nav>
