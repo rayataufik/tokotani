@@ -53,7 +53,8 @@ class ProductController extends Controller
             'photo_produk' => 'required|image|file|mimes:jpg,png|max:2048',
             'description' => 'required',
             'stok' => 'required',
-            'harga' => 'required'
+            'harga' => 'required',
+            'berat_produk' => 'required'
         ]);
 
         $validatedData['store_id'] = Store::where('user_id', $user->id)->value('id');
@@ -102,7 +103,8 @@ class ProductController extends Controller
             'photo_produk' => 'image|file|mimes:jpg,png|max:2048',
             'description' => 'required',
             'stok' => 'required',
-            'harga' => 'required'
+            'harga' => 'required',
+            'berat_produk' => 'required'
         ]);
 
         $validatedData['store_id'] = Store::where('user_id', $user->id)->value('id');
