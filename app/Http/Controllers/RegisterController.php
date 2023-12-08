@@ -29,7 +29,7 @@ class RegisterController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $validatedData = $request->validate([
             'fullname' => 'required|string|max:255',
             'email' => 'required|email:dns|unique:users',
@@ -39,7 +39,7 @@ class RegisterController extends Controller
         $validatedData['password'] = Hash::make($validatedData['password']);
         $validatedData['role'] = 'pelanggan';
         User::create($validatedData);
-        $request->session()->flash('success', 'Registration Successfull!! Please Login');
+        $request->session()->flash('success', 'Registration Successfull!!');
         return redirect('/login');
     }
 
