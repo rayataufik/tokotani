@@ -18,13 +18,12 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('photo_toko');
             $table->string('provinsi_toko')->nullable();
+            $table->string('kabupaten_toko')->nullable();
             $table->string('kecamatan_toko')->nullable();
             $table->string('kode_pos_toko')->nullable();
             $table->text('detail_alamat_toko')->nullable();
             $table->timestamps();
         });
-
-
     }
 
     /**

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('description');
             $table->string('stok');
+            $table->string('berat_produk');
             $table->unsignedBigInteger('harga');
             $table->timestamps();
         });

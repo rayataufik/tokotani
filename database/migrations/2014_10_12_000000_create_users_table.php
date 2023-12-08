@@ -16,8 +16,10 @@ return new class extends Migration
             $table->string('fullname');
             $table->string('email');
             $table->string('password');
-            $table->enum('role', ['admin','pelanggan','petani']);
+            $table->string('no_telepon_user')->nullable();;
+            $table->enum('role', ['admin', 'pelanggan', 'petani']);
             $table->string('provinsi_user')->nullable();
+            $table->string('kabupaten_user')->nullable();
             $table->string('kecamatan_user')->nullable();
             $table->string('kode_pos_user')->nullable();
             $table->text('detail_alamat_user')->nullable();
