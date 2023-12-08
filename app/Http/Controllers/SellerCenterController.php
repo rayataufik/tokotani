@@ -133,7 +133,7 @@ class SellerCenterController extends Controller
             'kecamatan_toko' => 'required|max:50',
             'kabupaten_toko' => 'required|max:50',
             'kode_pos_toko' => 'required|max:5',
-            'detail_alamat_toko' => 'required|max:225'
+            'detail_alamat_toko' => 'required|max:255'
         ]);
 
         if ($request->file('photo_toko')) {
