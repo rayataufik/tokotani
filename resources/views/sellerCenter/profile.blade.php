@@ -28,7 +28,7 @@
         </div>
         <div class="col-9 mb-3 mt-3">
             <label for="kabupaten_toko" class="form-label">Kabupaten</label>
-            <input type="text" class="form-control" id="kabupaten_toko" value="{{$sellerCenter->provinsi_toko}}"
+            <input type="text" class="form-control" id="kabupaten_toko" value="{{$sellerCenter->kabupaten_toko}}"
                 readonly disabled>
         </div>
         <div class="col-9 mb-3 mt-3">
