@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Transaction;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class TransactionController extends Controller
 {
@@ -48,6 +51,110 @@ class TransactionController extends Controller
 
         return view('pages.transaction', compact('product', 'quantity', 'total', 'user', 'berat'));
     }
+
+    public function process(Request $request)
+    {
+        try {
+            // Check if the user is authenticated
+            if (!Auth::check()) {
+                return response()->json(['error' => 'User not authenticated.'], 401);
+            }
+
+            // Retrieve the authenticated user
+            $user = Auth::user();
+
+            // Check if the user has an ID
+            if (!$user->id) {
+                return response()->json(['error' => 'User ID not found.'], 500);
+            }
+
+            // Retrieve values from the request
+            $product_id = $request->input('product_id');
+            $quantity = $request->input('quantity');
+            $berat = $request->input('berat');
+            $sicepat = $request->input('sicepat');
+            $metode_pembayaran = $request->input('metode_pembayaran');
+
+            // Retrieve product price based on product_id
+            $product = Product::find($product_id);
+
+            // Check if the product exists
+            if (!$product) {
+                return redirect()->back()->with('error', 'Product not found.');
+            }
+
+            // Calculate total tagihan
+            $hargaProduk = $product->harga;
+            $totalTagihan = ($hargaProduk * $quantity) + 18000;
+
+            // Generate a unique order ID
+            $orderId = Str::uuid()->toString();
+
+            // Perform Midtrans API request
+            $url = 'https://api.sandbox.midtrans.com/v2/charge';
+            $serverkey = config('midtrans.key');
+            $response = Http::withBasicAuth($serverkey, '')
+                ->post($url, [
+                    "payment_type" => "bank_transfer",
+                    "transaction_details" => [
+                        "order_id" => $orderId,
+                        "gross_amount" => $totalTagihan,
+                    ],
+                    "bank_transfer" => [
+                        "bank" => $metode_pembayaran,
+                    ],
+                    "customer_details" => [
+                        "first_name" => "TKN - ",
+                        "last_name" => $user->fullname
+                    ],
+                ]);
+
+            // Save transaction details to the database
+            $midtransResponse = $response->json();
+            if (isset($midtransResponse['status_code']) && $midtransResponse['status_code'] === '201') {
+                $vaNumber = $midtransResponse['va_numbers'][0]['va_number'];
+                $expiryTime = $midtransResponse['expiry_time'];
+
+                $transaction = new Transaction();
+                $transaction->user_id = $user->id;
+                // $transaction->product_id = $product_id;
+                // $transaction->quantity = $quantity;
+                // $transaction->berat = $berat;
+                $transaction->total_ongkir = 18000;
+                $transaction->status = 'unpaid';
+                $transaction->metode_pembayaran = $metode_pembayaran;
+                $transaction->total_tagihan = $totalTagihan;
+                $transaction->total_harga = $hargaProduk;
+                // $transaction->order_id = $orderId;
+                $transaction->va_number = $vaNumber;
+                $transaction->expiry_time = $expiryTime;
+                $transaction->save();
+
+                $transaction->product()->attach($product_id, [
+                    'quantity' => $quantity
+                ]);
+
+                // Redirect or respond as needed
+                return redirect('/payment');
+            } else {
+                // Redirect back with an error message
+                return redirect()->back()->with('error', 'Failed to create va_number for this transaction.');
+            }
+        } catch (\Exception $e) {
+            // Handle exceptions, log errors, and return an error response if needed
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function showPayment()
+    {
+        // Retrieve transaction details from the database
+        $transaction = Transaction::where('user_id', auth()->id())->latest()->first();
+        // dd($transaction);
+
+        return view('pages.payment', compact('transaction'));
+    }
+
 
     /**
      * Show the form for editing the specified resource.

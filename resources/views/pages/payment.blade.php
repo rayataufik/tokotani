@@ -5,20 +5,23 @@
         <div class="col w-500px">
             <div class="card">
                 <div class="card-header">
-                    <i class='bx bx-arrow-back'></i>
-                    <span class="ms-1">Kembali</span>
+                    <img src="{{ asset('assets/images/Logo.png') }}" alt="Tokotani" height="50">
                 </div>
                 <div class="card-body">
                     <div class="row">
+                        <div class="col-6">Bank transfer</div>
+                        <div class="col-6 text-end">{{ strtoupper($transaction->metode_pembayaran) }}</div>
                         <div class="col-6">Total Pembayaran</div>
-                        <div class="col-6 text-end">Rp 70.000</div>
-                        <div class="col-6">Bayar Dalam</div>
-                        <div class="col-6 text-end">23 jam 47 menit 54 detik</div>
-                        <div class="col-6">Bank BCA</div>
-                        <div class="col-6 text-end">126 0821 5394 1209</div>
+                        <div class="col-6 text-end">Rp {{ number_format($transaction->total_tagihan, 0, ',') }}
+                        </div>
+                        <div class="col-6">Expiry Time</div>
+                        <div class="col-6 text-end">{{ $transaction->expiry_time }}</div>
+                        <div class="col-6">Bank</div>
+                        <div class="col-6 text-end">{{ $transaction->va_number }}</div>
                     </div>
                     <div class="d-grid gap-2 mt-2">
-                        <button type="submit" class="btn btn-outline-login">OK</button>
+                        <button type="submit" class="btn btn-outline-login">Sudah Bayar</button>
+                        <button type="submit" class="btn btn-register">Kembali</button>
                     </div>
                 </div>
             </div>
