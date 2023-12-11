@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
@@ -57,7 +58,7 @@ class TransactionController extends Controller
         try {
             // Check if the user is authenticated
             if (!Auth::check()) {
-                return response()->json(['error' => 'User not authenticated.'], 401);
+                return redirect()->back()->with('error', 'User not authenticated.');
             }
 
             // Retrieve the authenticated user
@@ -65,7 +66,7 @@ class TransactionController extends Controller
 
             // Check if the user has an ID
             if (!$user->id) {
-                return response()->json(['error' => 'User ID not found.'], 500);
+                return redirect()->back()->with('error', 'User ID not found.');
             }
 
             // Retrieve values from the request
@@ -115,17 +116,18 @@ class TransactionController extends Controller
                 $vaNumber = $midtransResponse['va_numbers'][0]['va_number'];
                 $expiryTime = $midtransResponse['expiry_time'];
 
+                $product->stok -= $quantity;
+                $product->save();
+
                 $transaction = new Transaction();
                 $transaction->user_id = $user->id;
-                // $transaction->product_id = $product_id;
-                // $transaction->quantity = $quantity;
-                // $transaction->berat = $berat;
+                $transaction->jasa_pengiriman = $sicepat;
                 $transaction->total_ongkir = 18000;
                 $transaction->status = 'unpaid';
                 $transaction->metode_pembayaran = $metode_pembayaran;
                 $transaction->total_tagihan = $totalTagihan;
                 $transaction->total_harga = $hargaProduk;
-                // $transaction->order_id = $orderId;
+                $transaction->midtrans_id = $orderId;
                 $transaction->va_number = $vaNumber;
                 $transaction->expiry_time = $expiryTime;
                 $transaction->save();
@@ -146,6 +148,7 @@ class TransactionController extends Controller
         }
     }
 
+
     public function showPayment()
     {
         // Retrieve transaction details from the database
@@ -153,6 +156,17 @@ class TransactionController extends Controller
         // dd($transaction);
 
         return view('pages.payment', compact('transaction'));
+    }
+
+
+    public function orderList()
+    {
+        $transactions = Transaction::where('user_id', auth()->id())
+            ->with('order.product')
+            ->latest()
+            ->get();
+
+        return view('pages.orderList', ['transactions' => $transactions]);
     }
 
 
