@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('transaction_id');
             $table->unsignedBigInteger('product_id');
-            $table->integer('quantity');
+            $table->unsignedInteger('quantity');
             $table->timestamps();
 
             // Foreign key constraints

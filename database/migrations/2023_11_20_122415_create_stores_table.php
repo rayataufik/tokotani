@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('kecamatan_toko')->nullable();
             $table->string('kode_pos_toko')->nullable();
             $table->text('detail_alamat_toko')->nullable();
-            $table->int('saldo')->nullable();
+            $table->unsignedInteger('saldo')->nullable();
             $table->enum('status_penarikan_saldo', ['diproses', 'selesai'])->nullable();
             $table->string('bank')->nullable();
             $table->string('no_rekening')->nullable();

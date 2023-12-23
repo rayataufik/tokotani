@@ -18,9 +18,9 @@ return new class extends Migration
             $table->enum('status', ['paid', 'unpaid', 'diproses', 'dikirim', 'selesai', 'dibatalkan']);
             $table->enum('menunggu_pembatalan', ['dibatalkan', 'menunggu'])->nullable();
             $table->enum('cek_is_refund', ['refunded'])->nullable();
-            $table->int('total_harga');
-            $table->int('total_ongkir');
-            $table->int('total_tagihan');
+            $table->unsignedInteger('total_harga');
+            $table->unsignedInteger('total_ongkir');
+            $table->unsignedInteger('total_tagihan');
             $table->string('metode_pembayaran');
             $table->string('jasa_pengiriman');
             $table->string('resi_pengiriman')->nullable();
