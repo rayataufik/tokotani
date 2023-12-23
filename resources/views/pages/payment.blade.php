@@ -19,6 +19,11 @@
                         <div class="col-6">Bank</div>
                         <div class="col-6 text-end">{{ $transaction->va_number }}</div>
                     </div>
+                    <p>Cara Melakukan Pembayaran</p>
+                    <p>Kunjungi <a
+                            href="https://simulator.sandbox.midtrans.com">https://simulator.sandbox.midtrans.com</a></p>
+                    <p>pilih Virtual Account</p>
+                    <p>pilih Bank Yang Anda Gunakan</p>
                     <div class="d-grid gap-2 mt-2">
                         <a href="/order-list" class="btn btn-outline-login">Sudah Bayar</a>
                     </div>
