@@ -23,7 +23,7 @@ $categories = \App\Models\Category::all();
           </ul>
         </li>
       </ul>
-      <form class="d-flex w-75 has-search" role="search" action="{{ url('/search-transactions') }}" method="GET">
+      <form class="d-flex w-75 has-search" role="search" action="{{ secure_url('/search-transactions') }}" method="GET">
         <span class="bx bx-search form-control-feedback"></span>
         <input class="form-control" type="search" placeholder="Search" aria-label="Search" name="search">
       </form>
