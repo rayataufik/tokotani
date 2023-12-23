@@ -29,7 +29,8 @@ $categories = \App\Models\Category::all();
       </form>
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link active me-2 ms-2" aria-current="page" href="#">
+          <a class="nav-link active me-2 ms-2" aria-current="page" href="#" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="Coming Soon">
             <img src="{{ asset('assets/images/shopping-cart.svg') }}" alt="Cart" height="20">
           </a>
         </li>

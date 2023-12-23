@@ -76,7 +76,8 @@
                         </div>
                     </div>
                     <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn login-btn">+ Keranjang</button>
+                        <button type="submit" class="btn login-btn" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            title="Working on it!!">+ Keranjang</button>
                     </div>
                     <div class="d-grid gap-2 mt-2">
                         <a href="javascript:void(0);" onclick="buyNow('{{ $products->slug }}')"
@@ -119,29 +120,29 @@
     }
 
     function updateTotal() {
-    var quantityInput = document.getElementById("quantityInput");
-    var totalElement = document.getElementById("total");
-    var stokElement = document.getElementById("stok");
-    var hargaElement = document.getElementById("harga");
+        var quantityInput = document.getElementById("quantityInput");
+        var totalElement = document.getElementById("total");
+        var stokElement = document.getElementById("stok");
+        var hargaElement = document.getElementById("harga");
 
-    var quantity = parseInt(quantityInput.value);
-    var stok = parseInt(stokElement.textContent);
-    var pricePerItem = parseFloat(hargaElement.textContent.replace("Rp", "").replace(",", ""));
+        var quantity = parseInt(quantityInput.value);
+        var stok = parseInt(stokElement.textContent);
+        var pricePerItem = parseFloat(hargaElement.textContent.replace("Rp", "").replace(",", ""));
 
-    var newTotal = quantity * pricePerItem;
-    var newBerat = quantity * initialBerat; // Lakukan perhitungan berat baru
+        var newTotal = quantity * pricePerItem;
+        var newBerat = quantity * initialBerat; // Lakukan perhitungan berat baru
 
-    if (quantity > stok) {
-        alert("The requested quantity exceeds the available stock.");
-        quantityInput.value = stok;
-        newTotal = stok * pricePerItem;
+        if (quantity > stok) {
+            alert("The requested quantity exceeds the available stock.");
+            quantityInput.value = stok;
+            newTotal = stok * pricePerItem;
+        }
+
+        totalElement.textContent = "Rp " + newTotal.toLocaleString();
+        initialQuantity = quantity; // Update initial quantity
+        initialTotal = newTotal; // Update initial total
+        initialBerat = newBerat;
     }
-
-    totalElement.textContent = "Rp " + newTotal.toLocaleString();
-    initialQuantity = quantity; // Update initial quantity
-    initialTotal = newTotal; // Update initial total
-    initialBerat = newBerat;
-}
 
     function buyNow(slug) {
     // Construct the URL with updated quantity and total
@@ -150,5 +151,10 @@
     // Redirect to the constructed URL
     window.location.href = url;
     }
+    
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
 </script>
 @endpush
