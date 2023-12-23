@@ -30,13 +30,13 @@
             <div class="col produk-pilhan fw-semibold">
                 Produk Pilihan
             </div>
-            <div class="col text-end lihat-semua">
+            {{-- <div class="col text-end lihat-semua">
                 Lihat Semua
-            </div>
+            </div> --}}
         </div>
         <div class="row">
             @foreach ($products as $product)
-            <div class="col mt-4">
+            <div class="col-3 mt-4">
                 <div class="card" style="width: 19rem;">
                     <img src="{{ asset('storage/' . $product->photo_produk) }}" class="card-img-top" alt="..."
                         style="object-fit: cover; width: 303px; height: 206px;">

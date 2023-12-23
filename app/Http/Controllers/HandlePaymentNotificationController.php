@@ -15,9 +15,9 @@ class HandlePaymentNotificationController extends Controller
     {
         $payload = $request->all();
 
-        Log::info('Incoming-midtrans', [
-            'payload' => $payload
-        ]);
+        // Log::info('Incoming-midtrans', [
+        //     'payload' => $payload
+        // ]);
 
         $orderId = $payload['order_id'];
         $statusCode = $payload['status_code'];
