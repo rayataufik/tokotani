@@ -28,4 +28,9 @@ class Product extends Model
     {
         return $this->belongsToMany(Transaction::class, 'orders', 'transaction_id', 'product_id')->withTimestamps();
     }
+
+    public function category()
+    {
+        return $this->belongsToMany(Category::class);
+    }
 }

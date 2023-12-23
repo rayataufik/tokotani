@@ -2,60 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SellerCenter;
-use App\Models\Category;
+use App\Models\Order;
 use App\Models\Store;
 use App\Models\Product;
+use App\Models\Category;
+use App\Models\Transaction;
+use App\Models\SellerCenter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class SellerCenterController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $user = auth()->user();
-
-        if ($user && $user->role === 'petani') {
-            $storeWithNullDetailAlamatToko = SellerCenter::where('user_id', $user->id)
-                ->whereNull('detail_alamat_toko')
-                ->first();
-
-            $showAlert = $storeWithNullDetailAlamatToko !== null;
-
-            return view('sellerCenter.dashboard', compact('showAlert'));
-        }
-
-        return view('sellerCenter.dashboard');
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
 
     public function showProduct()
     {
-        $user = auth()->user();
+
         $title = 'Delete Product!';
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
@@ -149,6 +111,114 @@ class SellerCenterController extends Controller
 
         return redirect('/seller/profile')->with('success', 'Profile Updated Successfully!');
     }
+
+    public function tampilkanTransaksiByIdStore()
+    {
+        $user = Auth::user();
+
+        if ($user && $user->role === 'petani') {
+            $storeWithNullDetailAlamatToko = SellerCenter::where('user_id', $user->id)
+                ->whereNull('detail_alamat_toko')
+                ->first();
+
+            $showAlert = $storeWithNullDetailAlamatToko !== null;
+
+            $id_store = $user->store->id;
+
+            $transactions = Transaction::whereHas('order.product.store', function ($query) use ($id_store) {
+                $query->where('id', $id_store);
+            })->with(['order.product.store'])->get();
+
+            $products = Product::where('store_id', $user->store->id)->get();
+
+            $unpaidCount = $transactions->where('status', 'unpaid')->count();
+            $paidCount = $transactions->where('status', 'paid')->count();
+            $dikirimCount = $transactions->where('status', 'dikirim')->count();
+            $respon_pembatalan = $transactions->where('menunggu_pembatalan', 'menunggu')->count();
+            // Ambil transaksi berdasarkan id_store dengan status "selesai"
+            $transactionsSelesai = Transaction::whereHas('order.product.store', function ($query) use ($id_store) {
+                $query->where('id', $id_store);
+            })->where('status', 'selesai')->with(['order.product.store'])->get();
+
+
+            $transactionsSelesaiByProduct = $transactionsSelesai->groupBy('order.product.id');
+
+            $transactionsSelesaiCounts = $transactionsSelesaiByProduct->map(function ($transactions) {
+                return $transactions->count();
+            });
+
+
+
+            return view('sellerCenter.dashboard', compact('showAlert', 'products', 'transactions', 'transactionsSelesaiCounts', 'respon_pembatalan', 'unpaidCount', 'paidCount', 'dikirimCount'));
+        }
+
+        return view('sellerCenter.dashboard');
+    }
+
+    public function pesanan()
+    {
+        $user = auth()->user();
+        $id_store = $user->store->id;
+
+        $transactions = Transaction::whereHas('order.product.store', function ($query) use ($id_store) {
+            $query->where('id', $id_store);
+        })->with(['order.product.store', 'user'])->latest()->get();
+
+        return view('sellerCenter.pesanan', compact('transactions'));
+    }
+
+    public function updatePesanan(Request $request, $midtrans_id)
+    {
+        $transaction = Transaction::where("midtrans_id", $midtrans_id)->first();
+
+        if ($transaction) {
+            $validatedData = $request->validate([
+                "resi_pengiriman" => "required",
+            ]);
+
+            $validatedData["status"] = 'dikirim';
+
+            $transaction->update($validatedData);
+
+            return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui.');
+        } else {
+            return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');
+        }
+    }
+
+
+    public function updateRekeningSeller(Request $request)
+    {
+        // Validasi request
+        $validatedData = $request->validate([
+            'bank' => 'required|string',
+            'no_rekening' => 'required',
+        ]);
+
+        $user = Auth::user();
+        $store = $user->store;
+
+        // Update kolom bank dan no_rekening pada model Store
+        $store->update([
+            'bank' => $validatedData['bank'],
+            'no_rekening' => $validatedData['no_rekening'],
+        ]);
+
+        // Redirect atau tampilkan halaman yang sesuai
+        return back()->with('success', 'Rekening berhasil diperbarui.');
+    }
+
+
+    public function requestPenarikanSaldo($id)
+    {
+        $store = Store::find($id);
+
+        $store->update(['status_penarikan_saldo' => 'diproses']);
+
+        return back()->with('success', 'Request penarikan saldo diproses.');
+    }
+
+
 
     /**
      * Remove the specified resource from storage.

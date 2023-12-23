@@ -46,6 +46,11 @@
                 id="stok" name="stok" value="{{ old('stok')}}">
         </div>
         <div class="mt-3">
+            <label for="berat_produk" class="form-label">Tambahkan Berat Produk /Kg</label>
+            <input type="number" class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                id="berat_produk" name="berat_produk" value="{{ old('berat_produk')}}">
+        </div>
+        <div class="mt-3">
             <label for="harga" class="form-label">Tambahkan Harga</label>
             <input type="number" class="form-control" id="harga" name="harga"
                 oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="Contoh 10000"

@@ -1,3 +1,6 @@
+@php
+$categories = \App\Models\Category::all();
+@endphp
 <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
   <div class="container">
     <a class="navbar-brand" href="/">
@@ -9,13 +12,20 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link active me-2" aria-current="page" href="#">Kategori</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Kategori
+          </a>
+          <ul class="dropdown-menu">
+            @foreach ($categories as $category)
+            <li><a class="dropdown-item" href="/kategori/{{$category->slug}}">{{$category->nama}}</a></li>
+            @endforeach
+          </ul>
         </li>
       </ul>
-      <form class="d-flex w-75 has-search" role="search">
+      <form class="d-flex w-75 has-search" role="search" action="{{ url('/search-transactions') }}" method="GET">
         <span class="bx bx-search form-control-feedback"></span>
-        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+        <input class="form-control" type="search" placeholder="Search" aria-label="Search" name="search">
       </form>
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
@@ -31,9 +41,10 @@
             Hi, {{auth()->user()->fullname}}
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Pesanan</a></li>
+            <li><a class="dropdown-item" href="/order-list">Pembelian</a></li>
             <li><a class="dropdown-item" href="/pendaftaran-toko">Daftar Seller</a></li>
-            <li><a class="dropdown-item" href="#">Setting</a></li>
+            <li><a class="dropdown-item" href="/user/profile">Profile</a></li>
+            <li><a class="dropdown-item" href="/user/saldo">Saldo</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
@@ -51,9 +62,31 @@
             Hi, {{auth()->user()->fullname}}
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Pembelian</a></li>
+            <li><a class="dropdown-item" href="/order-list">Pembelian</a></li>
             <li><a class="dropdown-item" href="/seller/dashboard">Seller Center</a></li>
-            <li><a class="dropdown-item" href="#">Setting</a></li>
+            <li><a class="dropdown-item" href="/user/profile">Profile</a></li>
+            <li><a class="dropdown-item" href="/user/saldo">Saldo</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <form action="/logout" method="POST">
+                @csrf
+                <button type="submit" class="dropdown-item">Logout</button>
+              </form>
+            </li>
+          </ul>
+        </li>
+        @elseif (auth()->user()->role == 'admin')
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Hi, {{auth()->user()->fullname}}
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/order-list">Pembelian</a></li>
+            <li><a class="dropdown-item" href="/admin/dashboard">Admin Center</a></li>
+            <li><a class="dropdown-item" href="/user/profile">Profile</a></li>
+            <li><a class="dropdown-item" href="/user/saldo">Saldo</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>

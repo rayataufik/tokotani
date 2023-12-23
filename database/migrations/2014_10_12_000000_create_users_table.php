@@ -23,6 +23,10 @@ return new class extends Migration
             $table->string('kecamatan_user')->nullable();
             $table->string('kode_pos_user')->nullable();
             $table->text('detail_alamat_user')->nullable();
+            $table->int('saldo')->nullable();
+            $table->enum('status_penarikan_saldo', ['diproses', 'selesai'])->nullable();
+            $table->string('bank')->nullable();
+            $table->string('no_rekening')->nullable();
             $table->timestamps();
         });
     }

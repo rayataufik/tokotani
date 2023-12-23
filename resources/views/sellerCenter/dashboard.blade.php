@@ -10,7 +10,6 @@
     @if ($showAlert)
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         Profil petani belum lengkap. Harap tambahkan alamat toko.
-        {{-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> --}}
     </div>
     @endif
     <h1 class="mb-3">Dashboard</h1>
@@ -21,7 +20,7 @@
                     Belum Bayar
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">An item</li>
+                    <li class="list-group-item">{{$unpaidCount}}</li>
                 </ul>
             </div>
         </div>
@@ -31,7 +30,7 @@
                     Pengiriman Perlu Diproses
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">An item</li>
+                    <li class="list-group-item">{{$paidCount}}</li>
                 </ul>
             </div>
         </div>
@@ -41,7 +40,7 @@
                     Pengiriman Telah Diproses
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">An item</li>
+                    <li class="list-group-item">{{$dikirimCount}}</li>
                 </ul>
             </div>
         </div>
@@ -51,7 +50,7 @@
                     Menunggu Respon Pembatalan
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">An item</li>
+                    <li class="list-group-item">{{$respon_pembatalan}}</li>
                 </ul>
             </div>
         </div>
@@ -67,15 +66,17 @@
                 <th scope="col">Penjualan</th>
             </tr>
         </thead>
+        @foreach ($products as $product)
         <tbody>
             <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Rp20,000</td>
-                <td>10</td>
-                <td>2</td>
+                <th scope="row">{{ $loop->iteration }}</th>
+                <td>{{ $product->title }}</td>
+                <td>Rp. {{ number_format($product->harga, 0, ',', '.') }}</td>
+                <td>{{ $product->stok }}</td>
+                <td>{{ $transactionsSelesaiCounts[$product->id] ?? 0 }}</td>
             </tr>
         </tbody>
+        @endforeach
     </table>
 </div>
 @endsection

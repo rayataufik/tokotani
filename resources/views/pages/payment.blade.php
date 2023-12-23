@@ -20,8 +20,7 @@
                         <div class="col-6 text-end">{{ $transaction->va_number }}</div>
                     </div>
                     <div class="d-grid gap-2 mt-2">
-                        <button type="submit" class="btn btn-outline-login">Sudah Bayar</button>
-                        <button type="submit" class="btn btn-register">Kembali</button>
+                        <a href="/order-list" class="btn btn-outline-login">Sudah Bayar</a>
                     </div>
                 </div>
             </div>

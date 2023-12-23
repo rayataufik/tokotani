@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
+use App\Models\Store;
 use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
@@ -168,6 +170,129 @@ class TransactionController extends Controller
 
         return view('pages.orderList', ['transactions' => $transactions]);
     }
+
+    public function batalkanPesananUser($midtrans_id)
+    {
+        // Temukan transaksi berdasarkan midtrans_id
+        $transaction = Transaction::where('midtrans_id', $midtrans_id)->first();
+
+        if ($transaction) {
+            // Temukan pesanan terkait dengan transaksi
+            $order = Order::where('transaction_id', $transaction->id)->first();
+
+            if ($order) {
+                // Ambil product_id dan quantity dari pesanan
+                $product_id = $order->product_id;
+                $quantity = $order->quantity;
+
+                // Update stok pada tabel product
+                $product = Product::find($product_id);
+
+                if ($product) {
+                    // Tambahkan quantity kembali ke stok
+                    $product->stok += $quantity;
+                    $product->save();
+                }
+                $order->save();
+            }
+            $transaction->status = 'dibatalkan';
+            $transaction->save();
+            return redirect()->back()->with('success', 'Pesanan Berhasil Dibatalkan');
+        }
+    }
+
+    public function updatePesananSelesai($midtrans_id)
+    {
+        $transaction = Transaction::where("midtrans_id", $midtrans_id)->first();
+
+        if ($transaction) {
+            $transaction->update(['status' => 'selesai']);
+
+            return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui.');
+        } else {
+            return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');
+        }
+    }
+
+    public function saldoUser()
+    {
+        $user = Auth::user();
+
+        $saldo = Transaction::where('status', 'dibatalkan')
+            ->where('menunggu_pembatalan', 'dibatalkan')
+            ->whereNull('cek_is_refund')
+            ->where('user_id', $user->id)
+            ->sum('total_tagihan');
+
+        // Simpan nilai saldo ke dalam kolom saldo pada model User
+        $user->update(['saldo' => $saldo]);
+
+        return view('pages.saldo', compact('saldo', 'user'));
+    }
+
+
+
+
+    public function requestBatalkanUser($midtrans_id)
+    {
+        $transaction = Transaction::where('midtrans_id', $midtrans_id)->first();
+
+        $transaction->menunggu_pembatalan = 'menunggu';
+        $transaction->save();
+        return redirect()->back()->with('success', 'Menunggu Konfirmasi Penjual');
+    }
+
+    public function updateRequestPembatalan($midtrans_id)
+    {
+        // Temukan transaksi berdasarkan midtrans_id
+        $transaction = Transaction::where('midtrans_id', $midtrans_id)->first();
+
+        if ($transaction) {
+            // Temukan pesanan terkait dengan transaksi
+            $order = Order::where('transaction_id', $transaction->id)->first();
+
+            if ($order) {
+                // Ambil product_id dan quantity dari pesanan
+                $product_id = $order->product_id;
+                $quantity = $order->quantity;
+
+                // Update stok pada tabel product
+                $product = Product::find($product_id);
+
+                if ($product) {
+                    // Tambahkan quantity kembali ke stok
+                    $product->stok += $quantity;
+                    $product->save();
+                }
+                $order->save();
+            }
+            $transaction->status = 'dibatalkan';
+            $transaction->menunggu_pembatalan = 'dibatalkan';
+            $transaction->save();
+            return redirect()->back()->with('success', 'Pesanan Berhasil Dibatalkan');
+        }
+    }
+
+    public function saldoSeller()
+    {
+        $user = Auth::user();
+        $store = $user->store;
+
+        $saldo = Transaction::whereHas('order.product.store', function ($query) use ($store) {
+            $query->where('id', $store->id);
+        })
+            ->whereNull('cek_is_refund')
+            ->where('status', 'selesai')
+            ->sum('total_tagihan');
+
+        // Simpan nilai saldo ke dalam kolom saldo pada model Store
+        $store->update(['saldo' => $saldo]);
+
+        return view('sellerCenter.keuangan', compact('saldo', 'store'));
+    }
+
+
+
 
 
     /**

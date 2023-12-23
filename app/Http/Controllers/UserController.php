@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +33,38 @@ class UserController extends Controller
             // User has a detail_alamat_user
             return view('pages.profile', compact('user'));
         }
+    }
+
+    public function updateNoRekening(request $request)
+    {
+        $user = Auth::user();
+        $validatedData = $request->validate([
+            'bank' => 'required|string',
+            'no_rekening' => 'required',
+        ]);
+        // dd($validatedData);
+        $user->update($validatedData);
+        return back()->with('success', 'Rekening Berhasil Ditambahkan');
+    }
+
+    public function requestPenarikanSaldo($id)
+    {
+        $user = User::find($id);
+        $user->update(['status_penarikan_saldo' => 'diproses']);
+
+        // Redirect atau tampilkan halaman yang sesuai
+        return back()->with('success', 'Request penarikan saldo diproses.');
+    }
+
+    public function searchTransactions(Request $request)
+    {
+        $searchQuery = $request->input('search');
+
+        // Use the where clause to filter transactions based on the search query
+        $products = Product::where('title', 'like', '%' . $searchQuery . '%')
+            ->get();
+
+        return view('pages.search', compact('products', 'searchQuery'));
     }
 
     /**

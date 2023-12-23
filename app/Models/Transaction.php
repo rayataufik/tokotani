@@ -23,4 +23,9 @@ class Transaction extends Model
     {
         return $this->hasOne(Order::class, 'transaction_id')->with('product.store');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

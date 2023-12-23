@@ -46,13 +46,18 @@
             <trix-editor input="description"></trix-editor>
         </div>
         <div class="mt-3">
-            <label for="stok" class="form-label">Tambahkan Stok</label>
+            <label for="stok" class="form-label">Edit Stok</label>
             <input type="number" class="form-control" id="stok"
                 oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="stok"
                 value="{{ old('stok', $product->stok)}}">
         </div>
         <div class="mt-3">
-            <label for="harga" class="form-label">Tambahkan Harga</label>
+            <label for="berat_produk" class="form-label">Edit Berat Produk /Kg</label>
+            <input type="number" class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                id="berat_produk" name="berat_produk" value="{{ old('berat_produk', $product->berat_produk)}}">
+        </div>
+        <div class="mt-3">
+            <label for="harga" class="form-label">Edit Harga</label>
             <input type="number" oninput="this.value = this.value.replace(/[^0-9]/g, '');" class="form-control"
                 id="harga" name="harga" value="{{ old('harga', $product->harga)}}">
         </div>

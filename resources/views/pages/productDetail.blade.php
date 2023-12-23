@@ -20,7 +20,8 @@
                 </div>
                 <span class="bx bx-map me-1"></span>Dikirim dari <span class="fw-semibold">{{
                     $products->store->kabupaten_toko }}</span><br>
-                <span class="bx bx-cube-alt me-1"></span>Berat <span class="fw-semibold">10Kg</span>
+                <span class="bx bx-cube-alt me-1"></span>Berat <span class="fw-semibold">{{
+                    $products->berat_produk }} Kg</span>
             </div>
             <div class="harga-produk fw-semibold" id="harga">
                 Rp {{ number_format($products->harga, 0, ',') }}
@@ -78,7 +79,8 @@
                         <button type="submit" class="btn login-btn">+ Keranjang</button>
                     </div>
                     <div class="d-grid gap-2 mt-2">
-                        <button type="submit" class="btn btn-outline-login">Beli</button>
+                        <a href="javascript:void(0);" onclick="buyNow('{{ $products->slug }}')"
+                            class="btn btn-outline-login">Beli</a>
                     </div>
                 </div>
             </div>
@@ -101,6 +103,10 @@
 @endsection
 @push('script')
 <script>
+    var initialQuantity = 1;
+    var initialTotal = {{ $products->harga }}; // Set initial total based on the product's price
+    var initialBerat = {{ $products->berat_produk }};
+
     function updateQuantity(amount) {
         var quantityInput = document.getElementById("quantityInput");
         var currentQuantity = parseInt(quantityInput.value);
@@ -113,28 +119,36 @@
     }
 
     function updateTotal() {
-        var quantityInput = document.getElementById("quantityInput");
-        var totalElement = document.getElementById("total");
-        var stokElement = document.getElementById("stok");
-        var hargaElement = document.getElementById("harga");
+    var quantityInput = document.getElementById("quantityInput");
+    var totalElement = document.getElementById("total");
+    var stokElement = document.getElementById("stok");
+    var hargaElement = document.getElementById("harga");
 
-        var quantity = parseInt(quantityInput.value);
-        var stok = parseInt(stokElement.textContent);
+    var quantity = parseInt(quantityInput.value);
+    var stok = parseInt(stokElement.textContent);
+    var pricePerItem = parseFloat(hargaElement.textContent.replace("Rp", "").replace(",", ""));
 
-        // Assuming the price per item is fetched dynamically from an element with the ID 'harga'
-        var pricePerItem = parseFloat(hargaElement.textContent.replace("Rp", "").replace(",", ""));
+    var newTotal = quantity * pricePerItem;
+    var newBerat = quantity * initialBerat; // Lakukan perhitungan berat baru
 
-        var newTotal = quantity * pricePerItem;
+    if (quantity > stok) {
+        alert("The requested quantity exceeds the available stock.");
+        quantityInput.value = stok;
+        newTotal = stok * pricePerItem;
+    }
 
-        // Check if the requested quantity exceeds the available stock
-        if (quantity > stok) {
-            alert("The requested quantity exceeds the available stock.");
-            // Optionally, you can reset the quantity to the available stock
-            quantityInput.value = stok;
-            newTotal = stok * pricePerItem;
-        }
+    totalElement.textContent = "Rp " + newTotal.toLocaleString();
+    initialQuantity = quantity; // Update initial quantity
+    initialTotal = newTotal; // Update initial total
+    initialBerat = newBerat;
+}
 
-        totalElement.textContent = "Rp " + newTotal.toLocaleString(); // Format total as currency
+    function buyNow(slug) {
+    // Construct the URL with updated quantity and total
+    var url = "/beli-langsung/" + slug + "?quantity=" + initialQuantity + "&total=" + initialTotal + "&berat=" + initialBerat;
+    
+    // Redirect to the constructed URL
+    window.location.href = url;
     }
 </script>
 @endpush

@@ -1,12 +1,12 @@
 @extends('pages.app')
 @section('content')
 <div class="container discovery">
-    <h6>Menampilkan Produk Dari Kategori {{$category->nama}}</h6>
+    <h6>Menampilkan Produk Dari {{$searchQuery}}</h6>
     @if ($products->isEmpty())
     <div class="alert alert-light" role="alert">
         <h4 class="alert-heading">Produk Tidak Ditemukan</h4>
         <hr>
-        <p>Sepertinya tidak ada produk untuk Pencarian ini.</p>
+        <p>Sepertinya tidak ada produk untuk kategori ini.</p>
     </div>
     @endif
     <div class="row">
