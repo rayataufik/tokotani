@@ -23,6 +23,7 @@
 
 <body>
     @include('layouts.navbar')
+    @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"])
     @include('sweetalert::alert')
     @yield('content')
     <div class="mb-5"></div>

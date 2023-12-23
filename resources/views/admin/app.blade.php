@@ -29,6 +29,7 @@
 
 <body>
     @include('layouts.sidebar')
+    @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"])
     @include('sweetalert::alert')
     <div class="main-seller-center">
         @yield('content')
