@@ -6,7 +6,7 @@
     <div class="alert alert-light" role="alert">
         <h4 class="alert-heading">Produk Tidak Ditemukan</h4>
         <hr>
-        <p>Sepertinya tidak ada produk untuk Pencarian ini.</p>
+        <p>Sepertinya tidak ada produk untuk kategori ini.</p>
     </div>
     @endif
     <div class="row">

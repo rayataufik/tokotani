@@ -47,7 +47,8 @@
                 </div>
                 @if ($transaction->status == 'unpaid')
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a class="btn btn-register btn-sm" href="#" role="button">Bayar Sekarang</a>
+                    <button class="btn btn-register btn-sm" type="button" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop-{{$transaction->midtrans_id}}">Bayar Sekarang</button>
                     <div class="dropdown">
                         <button class="btn btn-outline-login btn-sm" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -67,7 +68,7 @@
                 @elseif ($transaction->status == 'paid')
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-register btn-sm" type="button" data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop-{{$transaction->midtrans_id}}">Lacak Pesanan</button>
+                        data-bs-target="#staticBackdroptr-{{$transaction->midtrans_id}}">Lacak Pesanan</button>
                     <div class="dropdown">
                         <button class="btn btn-outline-login btn-sm" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -87,7 +88,7 @@
                 @elseif ($transaction->status == 'paid' && $transaction->menunggu_pembatalan == 'menunggu')
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-register btn-sm" type="button" data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop-{{$transaction->midtrans_id}}">Lacak Pesanan</button>
+                        data-bs-target="#staticBackdroptr-{{$transaction->midtrans_id}}">Lacak Pesanan</button>
                     <div class="dropdown">
                         <button class="btn btn-outline-login btn-sm" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -103,7 +104,7 @@
                 @elseif ($transaction->status == 'dikirim')
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-register btn-sm" type="button" data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop-{{$transaction->midtrans_id}}">Lacak
+                        data-bs-target="#staticBackdroptr-{{$transaction->midtrans_id}}">Lacak
                         Pesanan</button>
                     <form action="/order-list/{{$transaction->midtrans_id}}/selesai" method="post">
                         @csrf
@@ -120,7 +121,7 @@
 
 @foreach ($transactions as $transaction)
 <!-- Modal -->
-<div class="modal fade" id="staticBackdrop-{{$transaction->midtrans_id}}" data-bs-backdrop="static"
+<div class="modal fade" id="staticBackdroptr-{{$transaction->midtrans_id}}" data-bs-backdrop="static"
     data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -148,6 +149,45 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+@foreach ($transactions as $transaction)
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop-{{$transaction->midtrans_id}}" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Lacak Pesanan</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">Bank transfer</div>
+                    <div class="col-6 text-end">{{ strtoupper($transaction->metode_pembayaran) }}</div>
+                    <div class="col-6">Total Pembayaran</div>
+                    <div class="col-6 text-end">Rp {{ number_format($transaction->total_tagihan, 0, ',') }}
+                    </div>
+                    <div class="col-6">Expired Time</div>
+                    <div class="col-6 text-end">{{ $transaction->expiry_time }}</div>
+                    <div class="col-6">Bank</div>
+                    <div class="col-6 text-end">{{ $transaction->va_number }}</div>
+                </div>
+                <p class="mt-3">Cara Melakukan Pembayaran</p>
+                <ul>
+                    <li>Kunjungi <a
+                            href="https://simulator.sandbox.midtrans.com">https://simulator.sandbox.midtrans.com</a>
+                    </li>
+                    <li>pilih Virtual Account</li>
+                    <li>pilih Bank Yang Anda Gunakan</li>
+                </ul>
+                <div class="d-grid gap-2 mt-2">
+                    <a href="/order-list" class="btn btn-outline-login">Sudah Bayar</a>
+                </div>
             </div>
         </div>
     </div>
